@@ -1,0 +1,13 @@
+
+USE GSSWEB
+GO
+SELECT TOP(5) WITH TIES 
+						  bd.BOOK_ID AS BookID, 
+			              BOOK_NAME AS BookName ,
+					      COUNT(*) AS QTY
+FROM BOOK_LEND_RECORD AS blr
+			 LEFT JOIN BOOK_DATA AS bd 
+ON blr.BOOK_ID=bd.BOOK_ID
+GROUP BY bd.BOOK_ID, 
+		 bd.BOOK_NAME
+ORDER BY QTY DESC

@@ -8,7 +8,10 @@ $(function(){
         {text:"網際網路",value:"internet"},
         {text:"應用系統整合",value:"system"},
         {text:"家庭保健",value:"home"},
-        {text:"語言",value:"language"}
+        {text:"語言",value:"language"},
+        {text:"行銷",value:"marketing"},
+        {text:"管理",value:"manage"}
+
     ]
     $("#book_category").kendoDropDownList({
         dataTextField: "text",
@@ -17,7 +20,10 @@ $(function(){
         index: 0,
         change: onChange
     });
-    $("#bought_datepicker").kendoDatePicker();
+    $("#bought_datepicker").kendoDatePicker({
+        value: new Date(),
+        format:"yyyy-MM-dd",
+    });
     $("#book_grid").kendoGrid({
         dataSource: {
             data: bookDataFromLocalStorage,
@@ -88,22 +94,39 @@ function onChange(){
 }
   
 function deleteBook(options){
-    
     var grid = $("#book_grid").data("kendoGrid");
-    var dataItem = grid.dataItem($(options.currentTarget).closest("tr"));
+    var dataItem = grid.dataItem($(options.currentTarget).closest("tr")); //找到最靠近點擊按鈕
     console.log(dataItem);
-    var localData= JSON.parse(localStorage.getItem("bookData"));
+    var localData= JSON.parse(localStorage["bookData"]);
     console.log("ready_delete");
     for(var i=0;i<localData.length;i++){
         console.log(options.BookId);
-        if(localData[i].BookId==dataItem.BookId)
+        if(localData[i].BookId==dataItem.BookId)       //如果有找到點擊書籍時
         {
             console.log("find");
-            localData.splice(i,1);
+            localData.splice(i,1);                     //刪除已點擊的書籍
             break;
         }
-
     }
     localStorage["bookData"]=JSON.stringify(localData);
     location.reload();
-}
+};
+
+$(".k-button").click(function(){
+    var b_category = $("#book_category").data("kendoDropDownList").text()
+    var b_name = $("#book_name").val();
+    var b_author = $("#book_author").val();
+    var b_data = $("#bought_datepicker").val();
+    var localData = JSON.parse(localStorage["bookData"]);
+    var datasource = JSON.parse(localStorage.getItem("bookData"));
+    var b_id =localData[localData.length-1].BookId+1;
+    datasource.push({
+        BookId:b_id,
+        BookAuthor:b_author,
+        BookCategory:b_category,
+        BookName:b_name,
+        BookBoughtDate:b_data
+    });
+    localStorage.setItem("bookData",JSON.stringify(datasource));
+    location.reload();
+});

@@ -11,7 +11,6 @@ $(function(){
         {text:"語言",value:"language"},
         {text:"行銷",value:"marketing"},
         {text:"管理",value:"manage"}
-
     ]
     $("#book_category").kendoDropDownList({
         dataTextField: "text",
@@ -34,7 +33,8 @@ $(function(){
                         BookName: { type: "string" },
                         BookCategory: { type: "string" },
                         BookAuthor: { type: "string" },
-                        BookBoughtDate: { type: "string" }
+                        BookBoughtDate: { type: "string" },
+                        BookPublisher:{type: "string"}
                     }
                 }
             },
@@ -49,13 +49,33 @@ $(function(){
         },
         columns: [
             { field: "BookId", title: "書籍編號",width:"10%"},
-            { field: "BookName", title: "書籍名稱", width: "50%" },
+            { field: "BookName", title: "書籍名稱", width: "40%" },
             { field: "BookCategory", title: "書籍種類", width: "10%" },
             { field: "BookAuthor", title: "作者", width: "15%" },
             { field: "BookBoughtDate", title: "購買日期", width: "15%" },
-            { command: { text: "刪除", click: deleteBook }, title: " ", width: "120px" }
+            { field: "BookPublisher", title: "出版社", width: "15%" },
+            { command: { text: "刪除", click: deleteBook }, title: " ", width: "100px" }
         ]
         
+    });
+    $(".book-grid-search").bind('input porpertychange',function(){
+        var text = $(".book-grid-search").val();
+        $("#book_grid").data("kendoGrid").dataSource.filter({
+            logic: "or",
+            filters:
+            [
+                {
+                    field: "BookName",
+                    operator:"contains",
+                    value: text
+                },   
+                {
+                    field: "BookAuthor",
+                    operator:"contains",
+                    value: text
+                },   
+            ]
+        });
     });
 })
 
@@ -70,27 +90,7 @@ function loadBookData(){
 function onChange(){
     var value = $("#book_category").val() ;
     $(".book-image").attr("src","image/"+value+".jpg")
-    /*if(value==1) 
-    {
-        $(".book-image").attr("src","image/database.jpg")
-    }
-    else if(value==2) 
-    {
-        $(".book-image").attr("src","image/internet.jpg")
-    }
-    else if(value==3) 
-    {
-        $(".book-image").attr("src","image/system.jpg")
-    }
-    else if(value==4) 
-    {
-        $(".book-image").attr("src","image/home.jpg")
-    }
-    else if(value==5) 
-    {
-        $(".book-image").attr("src","image/language.jpg")
-    }
-    */
+ 
 }
   
 function deleteBook(options){
@@ -112,11 +112,12 @@ function deleteBook(options){
     location.reload();
 };
 
-$(".k-button").click(function(){
+$(".insertbook").click(function(){
     var b_category = $("#book_category").data("kendoDropDownList").text()
     var b_name = $("#book_name").val();
     var b_author = $("#book_author").val();
     var b_data = $("#bought_datepicker").val();
+    var b_publisher = $("#book_publisher    ").val();
     var localData = JSON.parse(localStorage["bookData"]);
     var datasource = JSON.parse(localStorage.getItem("bookData"));
     var b_id =localData[localData.length-1].BookId+1;
@@ -125,7 +126,8 @@ $(".k-button").click(function(){
         BookAuthor:b_author,
         BookCategory:b_category,
         BookName:b_name,
-        BookBoughtDate:b_data
+        BookBoughtDate:b_data,
+        BookPublisher: b_publisher
     });
     localStorage.setItem("bookData",JSON.stringify(datasource));
     location.reload();

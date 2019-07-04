@@ -1,0 +1,78 @@
+﻿@model WorkShop.Models.Book
+
+@{
+    ViewBag.Title = "InsertBook";
+}
+
+<h2>InsertBook</h2>
+
+@if (ViewBag.InsertResult == true)
+{
+    <script>alert("新增完成!"); location.href = "/WorkShop";</script>
+}
+
+@using (Html.BeginForm("InsertBook", "BOOK", FormMethod.Post, new { id = "InsertBook" }))
+{
+    <table class="table table-bordered table-striped" style="width: 75%;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <tr>
+            <th style="text-align: right;">*@Html.LabelFor(model => model.BookName)</th>
+            <td>
+                @Html.TextBoxFor(model => model.BookName)
+                @Html.ValidationMessageFor(model => model.BookName, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align: right;">*@Html.LabelFor(model => model.BookAuthor)</th>
+            <td>
+                @Html.TextBoxFor(model => model.BookAuthor)
+                @Html.ValidationMessageFor(model => model.BookAuthor, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align: right;">*@Html.LabelFor(model => model.BookPublisher)</th>
+            <td>
+                @Html.TextBoxFor(model => model.BookPublisher)
+                @Html.ValidationMessageFor(model => model.BookPublisher, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align: right;">*@Html.LabelFor(model => model.BookIntro)</th>
+            <td>
+                @Html.TextBoxFor(model => model.BookIntro)
+                @Html.ValidationMessageFor(model => model.BookIntro, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align: right;">*@Html.LabelFor(model => model.BookBuyDate)</th>
+            <td>
+                @Html.TextBoxFor(model => model.BookBuyDate, new { @type = "Date", @style = "text-align:left" })
+                @Html.ValidationMessageFor(model => model.BookBuyDate, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <th style="text-align: right;">*@Html.LabelFor(model => model.BookClassName)</th>
+            <td>
+                @Html.DropDownListFor(model => model.BookClassID, (List<SelectListItem>)ViewBag.BookClassData, "請選擇")
+                @Html.ValidationMessageFor(model => model.BookClassID, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button class="btn btn-default" id="gogogo">存檔</button>
+            </td>
+        </tr>
+    </table>
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+}
+
+<script>
+    $('#gogogo').click(function () {
+        if (confirm("確定送出?"))
+            $('InsertBook').submit();
+    })
+</script>
